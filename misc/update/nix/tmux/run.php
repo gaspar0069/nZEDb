@@ -22,14 +22,14 @@ $nntpproxy = $pdo->getSetting('nntpproxy');
 
 echo "Starting Tmux...\n";
 // Create a placeholder session so tmux commands do not throw server not found errors.
-exec('tmux new-session -ds placeholder 2>/dev/null');
+exec('tmux -L tmux-nzedb new-session -ds placeholder 2>/dev/null');
 // Search for NNTPProxy session that might be running from a user threaded.php run. Setup a clean environment to run in.
-exec("tmux list-session | grep NNTPProxy", $nntpkill);
+exec("tmux -L tmux-nzedb list-session | grep NNTPProxy", $nntpkill);
 if (count($nntpkill) !== 0) {
-	exec("tmux kill-session -t NNTPProxy");
+	exec("tmux -L tmux-nzedb kill-session -t NNTPProxy");
 	echo $pdo->log->notice("Found NNTPProxy tmux session and killing it.");
 } else {
-	exec("tmux list-session", $session);
+	exec("tmux -L tmux-nzedb list-session", $session);
 }
 
 $t = new Tmux();
@@ -42,11 +42,11 @@ $tablepergroup = $pdo->getSetting('tablepergroup');
 $tablepergroup = ($tablepergroup != '') ? $tablepergroup : 0;
 
 //check if session exists
-$session = shell_exec("tmux list-session | grep $tmux_session");
+$session = shell_exec("tmux -L tmux-nzedb list-session | grep $tmux_session");
 // Kill the placeholder
-exec('tmux kill-session -t placeholder');
+exec("tmux -L tmux-nzedb kill-session -t placeholder");
 if (count($session) !== 0) {
-	exit($pdo->log->error("tmux session: '" . $tmux_session . "' is already running, aborting.\n"));
+	exit($pdo->log->error("tmux -L tmux-nzedb session: '" . $tmux_session . "' is already running, aborting.\n"));
 }
 
 $nntpproxy = $pdo->getSetting('nntpproxy');
@@ -98,9 +98,9 @@ if ($powerline == 1) {
 }
 
 if ($seq == 1) {
-	exec("cd ${DIR}/update/nix/tmux; tmux -f $tmuxconfig new-session -d -s $tmux_session -n Monitor 'printf \"\033]2;\"Monitor\"\033\"'");
-	exec("tmux selectp -t $tmux_session:0.0; tmux splitw -t $tmux_session:0 -h -p 67 'printf \"\033]2;update_releases\033\"'");
-	exec("tmux selectp -t $tmux_session:0.0; tmux splitw -t $tmux_session:0 -v -p 25 'printf \"\033]2;nzb-import\033\"'");
+	exec("cd ${DIR}/update/nix/tmux; tmux -L tmux-nzedb -f $tmuxconfig new-session -d -s $tmux_session -n Monitor 'printf \"\033]2;\"Monitor\"\033\"'");
+	exec("tmux -L tmux-nzedb selectp -t $tmux_session:0.0; tmux -L tmux-nzedb splitw -t $tmux_session:0 -h -p 67 'printf \"\033]2;update_releases\033\"'");
+	exec("tmux -L tmux-nzedb selectp -t $tmux_session:0.0; tmux -L tmux-nzedb splitw -t $tmux_session:0 -v -p 25 'printf \"\033]2;nzb-import\033\"'");
 
 	window_utilities($tmux_session);
 	window_post($tmux_session);
@@ -117,9 +117,9 @@ if ($seq == 1) {
 	attach($DIR, $tmux_session);
 } else {
 	if ($seq == 2) {
-		exec("cd ${DIR}/update/nix/tmux; tmux -f $tmuxconfig new-session -d -s $tmux_session -n Monitor 'printf \"\033]2;\"Monitor\"\033\"'");
-		exec("tmux selectp -t $tmux_session:0.0; tmux splitw -t $tmux_session:0 -h -p 67 'printf \"\033]2;sequential\033\"'");
-		exec("tmux selectp -t $tmux_session:0.0; tmux splitw -t $tmux_session:0 -v -p 25 'printf \"\033]2;nzb-import\033\"'");
+		exec("cd ${DIR}/update/nix/tmux; tmux -L tmux-nzedb -f $tmuxconfig new-session -d -s $tmux_session -n Monitor 'printf \"\033]2;\"Monitor\"\033\"'");
+		exec("tmux -L tmux-nzedb selectp -t $tmux_session:0.0; tmux -L tmux-nzedb splitw -t $tmux_session:0 -h -p 67 'printf \"\033]2;sequential\033\"'");
+		exec("tmux -L tmux-nzedb selectp -t $tmux_session:0.0; tmux -L tmux-nzedb splitw -t $tmux_session:0 -v -p 25 'printf \"\033]2;nzb-import\033\"'");
 
 		window_stripped_utilities($tmux_session);
 // todo simplify this IF removing redundancy (consider moving to a function)
@@ -135,11 +135,11 @@ if ($seq == 1) {
 		start_apps($tmux_session);
 		attach($DIR, $tmux_session);
 	} else {
-		exec("cd ${DIR}/update/nix/tmux; tmux -f $tmuxconfig new-session -d -s $tmux_session -n Monitor 'printf \"\033]2;Monitor\033\"'");
-		exec("tmux selectp -t $tmux_session:0.0; tmux splitw -t $tmux_session:0 -h -p 67 'printf \"\033]2;update_binaries\033\"'");
-		exec("tmux selectp -t $tmux_session:0.0; tmux splitw -t $tmux_session:0 -v -p 25 'printf \"\033]2;nzb-import\033\"'");
-		exec("tmux selectp -t $tmux_session:0.2; tmux splitw -t $tmux_session:0 -v -p 67 'printf \"\033]2;backfill\033\"'");
-		exec("tmux splitw -t $tmux_session -v -p 50 'printf \"\033]2;update_releases\033\"'");
+		exec("cd ${DIR}/update/nix/tmux; tmux -L tmux-nzedb -f $tmuxconfig new-session -d -s $tmux_session -n Monitor 'printf \"\033]2;Monitor\033\"'");
+		exec("tmux -L tmux-nzedb selectp -t $tmux_session:0.0; tmux -L tmux-nzedb splitw -t $tmux_session:0 -h -p 67 'printf \"\033]2;update_binaries\033\"'");
+		exec("tmux -L tmux-nzedb selectp -t $tmux_session:0.0; tmux -L tmux-nzedb splitw -t $tmux_session:0 -v -p 25 'printf \"\033]2;nzb-import\033\"'");
+		exec("tmux -L tmux-nzedb selectp -t $tmux_session:0.2; tmux -L tmux-nzedb splitw -t $tmux_session:0 -v -p 67 'printf \"\033]2;backfill\033\"'");
+		exec("tmux -L tmux-nzedb splitw -t $tmux_session -v -p 50 'printf \"\033]2;update_releases\033\"'");
 
 		window_utilities($tmux_session);
 		window_post($tmux_session);
@@ -231,36 +231,36 @@ function start_apps($tmux_session)
 	$console_bash = $tmux->console;
 
 	if ($htop == 1 && command_exist("htop")) {
-		exec("tmux new-window -t $tmux_session -n htop 'printf \"\033]2;htop\033\" && htop'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n htop 'printf \"\033]2;htop\033\" && htop'");
 	}
 
 	if ($nmon == 1 && command_exist("nmon")) {
-		exec("tmux new-window -t $tmux_session -n nmon 'printf \"\033]2;nmon\033\" && nmon -t'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n nmon 'printf \"\033]2;nmon\033\" && nmon -t'");
 	}
 
 	if ($vnstat == 1 && command_exist("vnstat")) {
-		exec("tmux new-window -t $tmux_session -n vnstat 'printf \"\033]2;vnstat\033\" && watch -n10 \"vnstat ${vnstat_args}\"'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n vnstat 'printf \"\033]2;vnstat\033\" && watch -n10 \"vnstat ${vnstat_args}\"'");
 	}
 
 	if ($tcptrack == 1 && command_exist("tcptrack")) {
-		exec("tmux new-window -t $tmux_session -n tcptrack 'printf \"\033]2;tcptrack\033\" && tcptrack ${tcptrack_args}'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n tcptrack 'printf \"\033]2;tcptrack\033\" && tcptrack ${tcptrack_args}'");
 	}
 
 	if ($bwmng == 1 && command_exist("bwm-ng")) {
-		exec("tmux new-window -t $tmux_session -n bwm-ng 'printf \"\033]2;bwm-ng\033\" && bwm-ng'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n bwm-ng 'printf \"\033]2;bwm-ng\033\" && bwm-ng'");
 	}
 
 	if ($mytop == 1 && command_exist("mytop")) {
-		exec("tmux new-window -t $tmux_session -n mytop 'printf \"\033]2;mytop\033\" && mytop -u'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n mytop 'printf \"\033]2;mytop\033\" && mytop -u'");
 	}
 
 	if ($showprocesslist == 1) {
-		exec("tmux new-window -t $tmux_session -n showprocesslist 'printf \"\033]2;showprocesslist\033\" && watch -n .5 \"mysql -e \\\"SELECT time, state, info FROM information_schema.processlist WHERE command != \\\\\\\"Sleep\\\\\\\" AND time >= $processupdate ORDER BY time DESC \\\G\\\"\"'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n showprocesslist 'printf \"\033]2;showprocesslist\033\" && watch -n .5 \"mysql -e \\\"SELECT time, state, info FROM information_schema.processlist WHERE command != \\\\\\\"Sleep\\\\\\\" AND time >= $processupdate ORDER BY time DESC \\\G\\\"\"'");
 	}
-	//exec("tmux new-window -t $tmux_session -n showprocesslist 'printf \"\033]2;showprocesslist\033\" && watch -n .2 \"mysql -e \\\"SELECT time, state, rows_examined, info FROM information_schema.processlist WHERE command != \\\\\\\"Sleep\\\\\\\" AND time >= $processupdate ORDER BY time DESC \\\G\\\"\"'");
+	//exec("tmux -L tmux-nzedb new-window -t $tmux_session -n showprocesslist 'printf \"\033]2;showprocesslist\033\" && watch -n .2 \"mysql -e \\\"SELECT time, state, rows_examined, info FROM information_schema.processlist WHERE command != \\\\\\\"Sleep\\\\\\\" AND time >= $processupdate ORDER BY time DESC \\\G\\\"\"'");
 
 	if ($console_bash == 1) {
-		exec("tmux new-window -t $tmux_session -n bash 'printf \"\033]2;Bash\033\" && bash -i'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n bash 'printf \"\033]2;Bash\033\" && bash -i'");
 	}
 }
 
@@ -277,7 +277,7 @@ function window_proxy($tmux_session, $window)
 		$nntpproxypy = $DIR . "update/python/nntpproxy.py";
 		if (file_exists($DIR . "update/python/lib/nntpproxy.conf")) {
 			$nntpproxyconf = $DIR . "update/python/lib/nntpproxy.conf";
-			exec("tmux new-window -t $tmux_session -n nntpproxy 'printf \"\033]2;NNTPProxy\033\" && python $nntpproxypy $nntpproxyconf'");
+			exec("tmux -L tmux-nzedb new-window -t $tmux_session -n nntpproxy 'printf \"\033]2;NNTPProxy\033\" && python $nntpproxypy $nntpproxyconf'");
 		}
 	}
 
@@ -286,7 +286,7 @@ function window_proxy($tmux_session, $window)
 		$nntpproxypy = $DIR . "update/python/nntpproxy.py";
 		if (file_exists($DIR . "update/python/lib/nntpproxy_a.conf")) {
 			$nntpproxyconf = $DIR . "update/python/lib/nntpproxy_a.conf";
-			exec("tmux selectp -t $tmux_session:$window.0; tmux splitw -t $tmux_session:$window -h -p 50 'printf \"\033]2;NNTPProxy\033\" && python $nntpproxypy $nntpproxyconf'");
+			exec("tmux -L tmux-nzedb selectp -t $tmux_session:$window.0; tmux -L tmux-nzedb splitw -t $tmux_session:$window -h -p 50 'printf \"\033]2;NNTPProxy\033\" && python $nntpproxypy $nntpproxyconf'");
 		}
 	}
 }
@@ -296,10 +296,10 @@ function window_proxy($tmux_session, $window)
  */
 function window_utilities($tmux_session)
 {
-	exec("tmux new-window -t $tmux_session -n utils 'printf \"\033]2;fixReleaseNames\033\"'");
-	exec("tmux splitw -t $tmux_session:1 -v -p 50 'printf \"\033]2;updateTVandTheaters\033\"'");
-	exec("tmux selectp -t $tmux_session:1.0; tmux splitw -t $tmux_session:1 -h -p 50 'printf \"\033]2;removeCrapReleases\033\"'");
-	exec("tmux selectp -t $tmux_session:1.2; tmux splitw -t $tmux_session:1 -h -p 50 'printf \"\033]2;decryptHashes\033\"'");
+	exec("tmux -L tmux-nzedb new-window -t $tmux_session -n utils 'printf \"\033]2;fixReleaseNames\033\"'");
+	exec("tmux -L tmux-nzedb splitw -t $tmux_session:1 -v -p 50 'printf \"\033]2;updateTVandTheaters\033\"'");
+	exec("tmux -L tmux-nzedb selectp -t $tmux_session:1.0; tmux -L tmux-nzedb splitw -t $tmux_session:1 -h -p 50 'printf \"\033]2;removeCrapReleases\033\"'");
+	exec("tmux -L tmux-nzedb selectp -t $tmux_session:1.2; tmux -L tmux-nzedb splitw -t $tmux_session:1 -h -p 50 'printf \"\033]2;decryptHashes\033\"'");
 }
 
 /**
@@ -307,8 +307,8 @@ function window_utilities($tmux_session)
  */
 function window_stripped_utilities($tmux_session)
 {
-	exec("tmux new-window -t $tmux_session -n utils 'printf \"\033]2;updateTVandTheaters\033\"'");
-	exec("tmux selectp -t $tmux_session:1.0; tmux splitw -t $tmux_session:1 -h -p 50 'printf \"\033]2;postprocessing_amazon\033\"'");
+	exec("tmux -L tmux-nzedb new-window -t $tmux_session -n utils 'printf \"\033]2;updateTVandTheaters\033\"'");
+	exec("tmux -L tmux-nzedb selectp -t $tmux_session:1.0; tmux -L tmux-nzedb splitw -t $tmux_session:1 -h -p 50 'printf \"\033]2;postprocessing_amazon\033\"'");
 }
 
 /**
@@ -316,7 +316,7 @@ function window_stripped_utilities($tmux_session)
  */
 function window_ircscraper($tmux_session)
 {
-	exec("tmux new-window -t $tmux_session -n IRCScraper 'printf \"\033]2;scrapeIRC\033\"'");
+	exec("tmux -L tmux-nzedb new-window -t $tmux_session -n IRCScraper 'printf \"\033]2;scrapeIRC\033\"'");
 }
 
 /**
@@ -324,9 +324,9 @@ function window_ircscraper($tmux_session)
  */
 function window_post($tmux_session)
 {
-	exec("tmux new-window -t $tmux_session -n post 'printf \"\033]2;postprocessing_additional\033\"'");
-	exec("tmux splitw -t $tmux_session:2 -v -p 67 'printf \"\033]2;postprocessing_non_amazon\033\"'");
-	exec("tmux splitw -t $tmux_session:2 -v -p 50 'printf \"\033]2;postprocessing_amazon\033\"'");
+	exec("tmux -L tmux-nzedb new-window -t $tmux_session -n post 'printf \"\033]2;postprocessing_additional\033\"'");
+	exec("tmux -L tmux-nzedb splitw -t $tmux_session:2 -v -p 67 'printf \"\033]2;postprocessing_non_amazon\033\"'");
+	exec("tmux -L tmux-nzedb splitw -t $tmux_session:2 -v -p 50 'printf \"\033]2;postprocessing_amazon\033\"'");
 }
 
 /**
@@ -334,8 +334,8 @@ function window_post($tmux_session)
  */
 function window_optimize($tmux_session)
 {
-	exec("tmux new-window -t $tmux_session -n optimize 'printf \"\033]2;update_nZEDb\033\"'");
-	exec("tmux splitw -t $tmux_session:3 -v -p 50 'printf \"\033]2;optimize\033\"'");
+	exec("tmux -L tmux-nzedb new-window -t $tmux_session -n optimize 'printf \"\033]2;update_nZEDb\033\"'");
+	exec("tmux -L tmux-nzedb splitw -t $tmux_session:3 -v -p 50 'printf \"\033]2;optimize\033\"'");
 }
 
 /**
@@ -350,7 +350,7 @@ function window_sharing($tmux_session)
 	$tmux_share = (isset($tmux->run_sharing)) ? $tmux->run_sharing : 0;
 
 	if ($tmux_share && $sharing['enabled'] == 1 && ($sharing['posting'] == 1 || $sharing['fetching'] == 1)) {
-		exec("tmux new-window -t $tmux_session -n Sharing 'printf \"\033]2;comment_sharing\033\"'");
+		exec("tmux -L tmux-nzedb new-window -t $tmux_session -n Sharing 'printf \"\033]2;comment_sharing\033\"'");
 	}
 }
 
@@ -367,9 +367,9 @@ function attach($DIR, $tmux_session)
 	}
 
 	//get list of panes by name
-	$panes_win_1 = exec("echo `tmux list-panes -t $tmux_session:0 -F '#{pane_title}'`");
+	$panes_win_1 = exec("echo `tmux -L tmux-nzdb list-panes -t $tmux_session:0 -F '#{pane_title}'`");
 	$panes0 = str_replace("\n", '', explode(" ", $panes_win_1));
 	$log = writelog($panes0[0]);
-	exec("tmux respawnp -t $tmux_session:0.0 '$PHP " . $DIR . "update/nix/tmux/monitor.php $log'");
-	exec("tmux select-window -t $tmux_session:0; tmux attach-session -d -t $tmux_session");
+	exec("tmux -L tmux-nzedb respawnp -t $tmux_session:0.0 '$PHP " . $DIR . "update/nix/tmux/monitor.php $log'");
+	exec("tmux -L tmux-nzedb select-window -t $tmux_session:0; tmux -L tmux-nzedb attach-session -d -t $tmux_session");
 }

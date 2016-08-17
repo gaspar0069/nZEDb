@@ -645,7 +645,7 @@ class NNTP extends \Net_NNTP_Client
 			$nntp->doQuit();
 		}
 
-		return $body;
+		return $this->_decodeIgnoreYEnc($body);
 	}
 
 	/**
@@ -1478,7 +1478,8 @@ class NNTP extends \Net_NNTP_Client
 							);
 						}
 						// Attempt to yEnc decode and return the body.
-						return $this->_decodeIgnoreYEnc($body);
+						//return $this->_decodeIgnoreYEnc($body);
+						return $body;
 					}
 
 					// Check for line that starts with double period, remove one.

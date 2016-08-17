@@ -704,9 +704,9 @@ class ProcessAdditional
 				$this->_processThumbnails === true ||
 				$this->_processMediaInfo === true ||
 				$this->_processAudioInfo === true ||
-				$this->_processVideo === true
+				$this->_processVideo === true ||
+				$this->_processJPGSample === true
 			) {
-
 				// Process usenet Message-ID downloads.
 				$this->_processMessageIDDownloads();
 
@@ -902,9 +902,8 @@ class ProcessAdditional
 			if ($this->_processJPGSample === true &&
 				empty($this->_JPGMessageIDs) &&
 				!preg_match('/flac|lossless|mp3|music|inner-sanctum|sound/i', $this->_releaseGroupName) &&
-				preg_match('/\.jpe?g[. ")\]]/i', $this->_currentNZBFile['title'])
+				preg_match('/[0\-]0[01]a?\.(jpe?g|png)[. ")\]]/i', $this->_currentNZBFile['title'])
 			) {
-
 				if (isset($this->_currentNZBFile['segments'])) {
 					// Get the amount of segments for this file.
 					$segCount = (count($this->_currentNZBFile['segments']) - 1);
@@ -915,6 +914,7 @@ class ProcessAdditional
 						}
 						$this->_JPGMessageIDs[] = (string)$this->_currentNZBFile['segments'][$i];
 					}
+						$this->_echo(count($this->_JPGMessageIDs)." - ".$this->_currentNZBFile['title'], 'info');
 				}
 			}
 

@@ -74,6 +74,8 @@ class Releases
 	 */
 	public function insertRelease(array $parameters = [])
 	{
+		//set passwordStatus = -1 for ones that we want to post process.
+		if ($parameters['categoryid'] == 6060) { $this->passwordStatus = -1; }
 		$parameters['id'] = $this->pdo->queryInsert(
 			sprintf("
 				INSERT INTO releases

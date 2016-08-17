@@ -22,12 +22,12 @@ $path = __DIR__;
 $tmux->startRunning();
 
 // Create a placeholder session so tmux commands do not throw server not found errors.
-exec('tmux new-session -ds placeholder 2>/dev/null');
+exec('tmux -L tmux-nzedb new-session -ds placeholder 2>/dev/null');
 
 //check if session exists
-$session = shell_exec("tmux list-session | grep $tmux_session");
+$session = shell_exec("tmux -L tmux-nzedb list-session | grep $tmux_session");
 // Kill the placeholder
-exec('tmux kill-session -t placeholder');
+exec('tmux -L tmux-nzedb kill-session -t placeholder');
 if (count($session) == 0) {
 	echo $pdo->log->info("Starting the tmux server and monitor script.\n");
 	passthru("php $path/run.php");

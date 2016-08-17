@@ -157,20 +157,20 @@ class Tmux
 
 		$runVar['conncounts'][$which]['active'] = $runVar['conncounts'][$which]['total'] = 0;
 
-		$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("ss -n | grep " . $connections[$ip] . ":" . $connections[$port] . " | grep -c ESTAB"));
-		$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("ss -n | grep -c " . $connections[$ip] . ":" . $connections[$port]));
+		$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("netstat -n | grep " . $connections[$ip] . ":" . $connections[$port] . " | grep -c ESTAB"));
+		$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("netstat -n | grep -c " . $connections[$ip] . ":" . $connections[$port]));
 
 		if ($runVar['conncounts'][$which]['active'] == 0 && $runVar['conncounts'][$which]['total'] == 0) {
-				$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("ss -n | grep " . $connections[$ip] . ":https | grep -c ESTAB"));
-				$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("ss -n | grep -c " . $connections[$ip] . ":https"));
+				$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("netstat -n | grep " . $connections[$ip] . ":https | grep -c ESTAB"));
+				$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("netstat -n | grep -c " . $connections[$ip] . ":https"));
 		}
 		if ($runVar['conncounts'][$which]['active'] == 0 && $runVar['conncounts'][$which]['total'] == 0) {
-			$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("ss -n | grep " . $connections[$port] . " | grep -c ESTAB"));
-			$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("ss -n | grep -c " . $connections[$port]));
+			$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("netstat -n | grep " . $connections[$port] . " | grep -c ESTAB"));
+			$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("netstat -n | grep -c " . $connections[$port]));
 		}
 		if ($runVar['conncounts'][$which]['active'] == 0 && $runVar['conncounts'][$which]['total'] == 0) {
-			$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("ss -n | grep " . $connections[$ip] . " | grep -c ESTAB"));
-			$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("ss -n | grep -c " . $connections[$ip]));
+			$runVar['conncounts'][$which]['active'] = str_replace("\n", '', shell_exec("netstat -n | grep " . $connections[$ip] . " | grep -c ESTAB"));
+			$runVar['conncounts'][$which]['total'] = str_replace("\n", '', shell_exec("netstat -n | grep -c " . $connections[$ip]));
 		}
 		return ($runVar['conncounts']);
 	}
