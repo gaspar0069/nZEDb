@@ -89,9 +89,14 @@ class ReleaseImage
 		} else if (is_file($imgLoc)) {
 			$img = @file_get_contents($imgLoc);
 		}
-
 		if ($img !== false) {
 			$im = @imagecreatefromstring($img);
+			if (($im == false) && is_file($imgLoc)) {
+				// Corrupted, try mogrifying the image...
+				@exec(@escapeshellcmd('/usr/local/bin/mogrify -flatten '.$imgLoc));
+				$img = @file_get_contents($imgLoc);
+				$im = @imagecreatefromstring($img);
+			}
 			if ($im !== false) {
 				imagedestroy($im);
 				return $img;

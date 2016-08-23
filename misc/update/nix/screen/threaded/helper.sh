@@ -16,7 +16,7 @@ while :
 do
 
 	cd ${NZEDB_PATH}
-	$PHP $NZEDB_PATH/update_releases.php 1 false
+	$PHP $NZEDB_PATH/nix/multiprocessing/releases.php
 	cd ${TEST_PATH}
 	$PHP ${TEST_PATH}/Release/removeCrapReleases.php true 1
 

@@ -65,13 +65,13 @@ do
 	fi
 
 	DIFF=$(($CURRTIME-$LASTOPTIMIZE2))
-	if [ "$DIFF" -gt 43200 ] || [ "$DIFF" -lt 1 ]
-	then
-		LASTOPTIMIZE2=`date +%s`
-		echo "Updating schedules..."
+	#if [ "$DIFF" -gt 43200 ] || [ "$DIFF" -lt 1 ]
+	#then
+	#	LASTOPTIMIZE2=`date +%s`
+	#	echo "Updating schedules..."
 		#$PHP ${NZEDB_PATH}/update_tvschedule.php
-		$PHP ${NZEDB_PATH}/update_theaters.php
-	fi
+		#$PHP ${NZEDB_PATH}/update_theaters.php
+	#fi
 
 	echo "waiting ${NZEDB_SLEEP_TIME} seconds..."
 	sleep ${NZEDB_SLEEP_TIME}

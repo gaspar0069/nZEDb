@@ -31,7 +31,7 @@ export DEV_PATH="${NZEDB_ROOT}/misc/testing/Developers"
 export DB_PATH="${NZEDB_ROOT}/misc/testing/DB"
 export THREADED_PATH="${NZEDB_ROOT}/misc/update/python"
 export MULTI_PATH="${NZEDB_ROOT}/misc/update/nix/multiprocessing"
-export NZEDB_SLEEP_TIME="60" # in seconds
+export NZEDB_SLEEP_TIME=$((60*30)) # in seconds
 
 command -v php5 >/dev/null 2>&1 && export PHP=`command -v php5` || { export PHP=`command -v php`; }
 command -v python3 >/dev/null 2>&1 && export PYTHON=`command -v python3` || { export PYTHON=`command -v python`; }
@@ -105,12 +105,12 @@ do
 	echo "--- Create Releases ---"
 	$PHP ${MULTI_PATH}/releases.php					#Creates releases from complete collections one group per thread.
 #
-	echo "--- Decrypt Hashes ---"
-	$PHP ${NZEDB_PATH}/decrypt_hashes.php 10240
+#	echo "--- Decrypt Hashes ---"
+#	$PHP ${NZEDB_PATH}/decrypt_hashes.php 10240
 #	echo "--- PreDB ---"
 #	$PHP ${NZEDB_PATH}/nix/tmux/bin/postprocess_pre.php	# Post-Process PreDBs
-	echo "--- PREs ---"
-	$PHP ${NZEDB_PATH}/match_prefiles.php 10240 show # Match PREs
+#	echo "--- PREs ---"
+#	$PHP ${NZEDB_PATH}/match_prefiles.php 10240 show # Match PREs
 ## Post-Processing options
 #	$PHP ${MULTI_PATH}/requestid.php				#run local lookup for requestID matching.
 
@@ -119,38 +119,38 @@ do
 	echo "--- NFO ---"
 	$PHP ${MULTI_PATH}/postprocess.php nfo			#run postprocess nfo - process nfo files
 #
-	echo "--- TV ---"
-	$PHP ${MULTI_PATH}/postprocess.php tv			#run postprocess tv - lookup TVRage/Trakt info / covers etc.
+#	echo "--- TV ---"
+#	$PHP ${MULTI_PATH}/postprocess.php tv			#run postprocess tv - lookup TVRage/Trakt info / covers etc.
 #	$PHP ${MULTI_PATH}/postprocess.php tv true		#run postprocess tv - lookup TVRage/Trakt info / covers etc but ONLY for renamed releases.
 #
-	echo "--- Movie ---"
-	$PHP ${MULTI_PATH}/postprocess.php mov			#run postprocess movies - lookup IMDB info / covers etc
+#	echo "--- Movie ---"
+#	$PHP ${MULTI_PATH}/postprocess.php mov			#run postprocess movies - lookup IMDB info / covers etc
 #	$PHP ${MULTI_PATH}/postprocess.php mov true		#run postprocess movies - lookup IMDB info / covers etc but ONLY for renamed releases
 #
 #	$PHP ${MULTI_PATH}/postprocess.php ama			#Do amazon processing, this does not use multi-processing, because of amazon API restrictions.
-	echo "--- Comments ---"
-	$PHP ${MULTI_PATH}/postprocess.php sha			#Do sharing processing, this does not using multi-processing.
+#	echo "--- Comments ---"
+#	$PHP ${MULTI_PATH}/postprocess.php sha			#Do sharing processing, this does not using multi-processing.
 #
 ## Fix Release names options
 #
-	echo "--- FixRelNames ---"
-	$PHP ${MULTI_PATH}/fixrelnames.php nfo			#Attempt to fix release name using the nfo.
-	$PHP ${MULTI_PATH}/fixrelnames.php filename		#Attempt to fix release name using the filenames.
-	$PHP ${MULTI_PATH}/fixrelnames.php predbft		#Attempt to fix release name using Predb full text matching.
-	$PHP ${MULTI_PATH}/fixrelnames.php miscsorter	#Attempt to fix release name using magic.
-	$PHP ${MULTI_PATH}/fixrelnames.php md5			#Attempt to fix release name using the MD5.
-	$PHP ${MULTI_PATH}/fixrelnames.php par2			#Attempt to fix release name using the PAR2.
+#	echo "--- FixRelNames ---"
+#	$PHP ${MULTI_PATH}/fixrelnames.php nfo			#Attempt to fix release name using the nfo.
+#	$PHP ${MULTI_PATH}/fixrelnames.php filename		#Attempt to fix release name using the filenames.
+#	$PHP ${MULTI_PATH}/fixrelnames.php predbft		#Attempt to fix release name using Predb full text matching.
+#	$PHP ${MULTI_PATH}/fixrelnames.php miscsorter	#Attempt to fix release name using magic.
+#	$PHP ${MULTI_PATH}/fixrelnames.php md5			#Attempt to fix release name using the MD5.
+#	$PHP ${MULTI_PATH}/fixrelnames.php par2			#Attempt to fix release name using the PAR2.
 #
 ### End of Multi-processing scripts
 
-	echo "--- removeCrapReleases ---"
+#	echo "--- removeCrapReleases ---"
 #	$PHP ${TEST_PATH}/removeCrapReleases.php true full size
 #	$PHP ${TEST_PATH}/removeCrapReleases.php true full scr
-	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 codec		# 168 hours in case this script not called every day. Adjust as needed
-	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 passwordurl
-	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 passworded
-	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 installbin
-	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 executable
+#	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 codec		# 168 hours in case this script not called every day. Adjust as needed
+#	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 passwordurl
+#	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 passworded
+#	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 installbin
+#	$PHP ${TEST_PATH}/removeCrapReleases.php true 168 executable
 #	$PHP ${TEST_PATH}/removeCrapReleases.php true full short
 #
 ## Python version of these scripts below no longer supported
